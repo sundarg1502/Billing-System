@@ -1,0 +1,277 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sri Murugan Metal - Invoice Generator</title>
+    <link rel="stylesheet" href={% static 'css/invoice.css' %}>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SRI MURUGAN METAL</h1>
+            <p>AN ISO 9001:2015 CERTIFIED COMPANY</p>
+            <p>MANUFACTURING AND SUPPLY OF TITANIUM METAL POWDER</p>
+            <p class="address">2/383 East Street,Mathikondan-636805,Virudhunagar(Dist),Tamilnadu</p>
+        </header>
+            <!-- Basic Details Section -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="toName">TO:</label>
+                    <div class="select-option">
+                        <select id='toName' name="toName">
+                            <option value="None">select One</option>
+                            {% for comp in company %}
+                                <option value="{{comp.c_name}}" >{{comp.c_name}}</option>
+                            {% endfor %}
+                        </select>
+                        {% comment %} <button type="submit" class="fill" id="fill">Auto Fill</button> {% endcomment %}
+                        {% comment %} <a href="{% url 'Bill:invoice' name="Varshini fireworks" %}">Auto Fill</a> {% endcomment %}
+                    </div>
+                    {% comment %} <input type="select" id="toName" name="toName" > {% endcomment %}
+                
+                </div>
+                <div class="form-row">
+                    {% comment %} <div class="form-group">
+                        <label for="invoiceNo">Invoice No:</label>
+                        <input type="text" id="invoiceNo" name="invoiceNo" >
+                    </div> {% endcomment %}
+                    <div class="form-group">
+                        <label for="invoiceDate">Invoice Date:</label>
+                        <input type="date" id="invoiceDate" name="invoiceDate"   >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ewayBill">E-Way Bill No:</label>
+                    <input type="text" id="ewayBill" name="ewayBill"  >
+                </div>
+
+                <div class="form-group">
+                    <label for="shippingAddress">Shipping Address:</label>
+                    <textarea id="shippingAddress" name="shippingAddress" rows="3" value={{data}}>{{data}}</textarea>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="form-section">
+                <table id="itemsTable">
+                    <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Description of Goods</th>
+                            <th>HSN/SAC</th>
+                            <th>QTY</th>
+                            <th>RATE</th>
+                            <th>AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                {% comment %} <input type="text" name="description[]" > {% endcomment %}
+                                <select id="product" name="product">
+                                    <option value="">--Select Product--</option>
+                                </select>
+                            </td>
+                            <td><input type="text" name="hsn[]" value=81082000 ></td>
+                            <td><input type="number" name="qty[]"  ></td>
+                            <td><input type="number" name="rate[]"  ></td>
+                            <td><input type="number" name="amount[]" readonly class="amount-input"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" id="addRow" class="addRow">Add Row</button>
+            </div>
+            <div class="totals-section">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>CGST (9%):</span>
+                    <span id="cgst">0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>SGST (9%):</span>
+                    <span id="sgst">0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>IGST (18%):</span>
+                    <span id="igst">0.00</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span>Grand Total:</span>
+                    <span id="grand-total">0.00</span>
+                </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="form-section">
+                <h3>Bank Details</h3>
+                <div class="form-group">
+                    <label for="bankName">Bank Name:</label>
+                    <input type="text" id="bankName" name="bankName" >
+                </div>
+                <div class="form-group">
+                    <label for="accountNo">Bank Account No:</label>
+                    <input type="text" id="accountNo" name="accountNo" >
+                </div>
+                <div class="form-group">
+                    <label for="ifscCode">Bank IFSC Code:</label>
+                    <input type="text" id="ifscCode" name="ifscCode" >
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-section">
+                <button type="submit" class="submit-btn">Generate Invoice</button>
+            </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        // Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to elements
+    const itemsTable = document.getElementById('itemsTable');
+    const addRowBtn = document.getElementById('addRow');
+    const tbody = itemsTable.querySelector('tbody');
+
+    // Counter for row numbers
+    let rowCount = 1;
+
+    // Function to create new row
+    function createNewRow() {
+        rowCount++;
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${rowCount}</td>
+            <td><input type="text" name="description[]" ></td>
+            <td><input type="text" name="" value=81082000 ></td>
+            <td><input type="number" name="qty[]" step="0.001"  class="qty-input"></td>
+            <td><input type="number" name="rate[]" step="0.01"  class="rate-input"></td>
+            <td><input type="number" name="amount[]" readonly class="amount-input"></td>
+            <td><button type="button" class="delete-row">×</button></td>
+        `;
+        tbody.appendChild(newRow);
+
+        // Add event listeners to new inputs
+        addCalculationListeners(newRow);
+    }
+
+    // Function to add calculation listeners to a row
+    function addCalculationListeners(row) {
+        const qtyInput = row.querySelector('.qty-input');
+        const rateInput = row.querySelector('.rate-input');
+        const amountInput = row.querySelector('.amount-input');
+
+        function calculateAmount() {
+            const qty = parseFloat(qtyInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+            const amount = qty * rate;
+            amountInput.value = amount.toFixed(2);
+            calculateTotal();
+        }
+
+        qtyInput.addEventListener('input', calculateAmount);
+        rateInput.addEventListener('input', calculateAmount);
+    }
+
+    // Function to calculate total amount
+    function calculateTotal() {
+        const amounts = Array.from(document.getElementsByClassName('amount-input'));
+        const total = amounts.reduce((sum, input) => {
+            return sum + (parseFloat(input.value) || 0);
+        }, 0);
+        
+        // Calculate GST
+        const cgst = total * 0.09; // 9% CGST
+        const sgst = total * 0.09; // 9% SGST
+        const igst = total * 0.18; // 18% IGST
+        const grandTotal = total + cgst + sgst;
+
+        // Update totals if elements exist
+        updateTotalElement('subtotal', total);
+        updateTotalElement('cgst', cgst);
+        updateTotalElement('sgst', sgst);
+        updateTotalElement('igst', igst);
+        updateTotalElement('grand-total', grandTotal);
+    }
+
+    // Helper function to update total elements
+    function updateTotalElement(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value.toFixed(2);
+        }
+    }
+
+    // Function to delete row
+    function deleteRow(event) {
+        if (event.target.classList.contains('delete-row')) {
+            const row = event.target.closest('tr');
+            row.remove();
+            renumberRows();
+            calculateTotal();
+        }
+    }
+
+    // Function to renumber rows
+    function renumberRows() {
+        const rows = tbody.getElementsByTagName('tr');
+        rowCount = rows.length;
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].cells[0].textContent = i + 1;
+        }
+    }
+
+    // Add event listeners
+    addRowBtn.addEventListener('click', createNewRow);
+    itemsTable.addEventListener('click', deleteRow);
+
+    // Add calculation listeners to initial row
+    const initialRow = tbody.querySelector('tr');
+    if (initialRow) {
+        addCalculationListeners(initialRow);
+    }
+
+    // Form submission handler
+    document.getElementById('invoiceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Here you can add code to collect all the form data
+        // and generate the final invoice
+        console.log('Form submitted - add your invoice generation logic here');
+    });
+
+    // Async 
+});
+
+
+$(document).ready(function () {
+    // Update products based on the selected name
+    $('#toName').change(function () {
+        const to_Name = $(this).val();
+        if (to_Name) {
+            $.ajax({
+                url: '/products/',  // URL for fetching products
+                data: { toName: to_Name },
+                success: function (response) {
+                    const productSelect = $('#product');
+                    productSelect.empty(); // Clear previous options
+                    productSelect.append('<option value="">--Select Product--</option>');
+                    response.products.forEach(product => {
+                        productSelect.append(`<option value="${product.id}">${product.name}</option>`);
+                    });
+                }
+            });
+        }
+    });
+
+});
+</script>
+</body>
+</html>
