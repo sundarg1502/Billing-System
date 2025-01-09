@@ -1,26 +1,22 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
+from django.http import JsonResponse
 from Bill.models import *
 from Bill.forms import *
 
 def invoice(request):
     company = Company.objects.all()
-    # if request.method == 'POST':
-    #     # c_name_req = pyth
-    #     data = Company.objects.get(pk=1)
-    #     # print(data.toAddress)
-    #     add= data.toAddress
-    #     return render(request, "invoice.html",{"company":company,"data":add})
-
     return render(request, "invoice.html",{"company":company})
 
+def address(request):
+    add = Company.objects.get(c_name=request.GET.get('toName')).toAddress
+    return JsonResponse({'add':add})
+
 def products(request):
-    # print("Function vvallledd")
     cName = request.GET.get('toName')
     product = request.GET.get('prod')
     print(product)
     company = Company.objects.get(c_name=cName)
-    print(company.c_name)
-    print(company.mesh_40)
-
-    # return HttpResponse
-    # return render(request, "invoice.html",{"company":company})
+    rate = getattr(company,product)
+    # toName = company.toAddress
+    
+    return JsonResponse({'price':rate})
