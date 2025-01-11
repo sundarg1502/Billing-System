@@ -15,13 +15,14 @@
             <p>MANUFACTURING AND SUPPLY OF TITANIUM METAL POWDER</p>
             <p class="address">2/383 East Street,Mathikondan-636805,Virudhunagar(Dist),Tamilnadu</p>
         </header>
-            <!-- Basic Details Section -->
+        <form method="post">
+            {% csrf_token %}
             <div class="form-section">
                 <div class="form-group">
                     <label for="toName">TO:</label>
                     <div class="select-option">
-                        <select id='toName' name="toName">
-                            <option value="None">select One</option>
+                        <select id='toName' name="toName" required>
+                            <option value="">select One</option>
                             {% for comp in company %}
                                 <option value="{{comp.c_name}}" >{{comp.c_name}}</option>
                             {% endfor %}
@@ -39,7 +40,7 @@
                     </div> {% endcomment %}
                     <div class="form-group">
                         <label for="invoiceDate">Invoice Date:</label>
-                        <input type="date" id="invoiceDate" name="invoiceDate"   >
+                        <input type="date" id="invoiceDate" required name="invoiceDate"   >
                     </div>
                 </div>
 
@@ -49,8 +50,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="shippingAddress">Shipping Address:</label>
-                    <textarea id="shippingAddress" name="shippingAddress" rows="3" value={{data}}>{{data}}</textarea>
+                    <label for="shippingAddress1">Shipping Address:</label>
+                    <input type="text" id="shippingAddress" name="shippingAddress" required rows="3" value={{data}}>{{data}}</textarea>
                 </div>
             </div>
 
@@ -72,7 +73,7 @@
                             <td>1</td>
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
-                                <select id="product1" name="product">
+                                <select id="product1" name="product1" required>
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -85,15 +86,15 @@
                                     <option value="mesh_80_100">80-100 mesh</option>
                                 </select>
                             </td>
-                            <td><input type="text" name="hsn[]" value=81082000 ></td>
-                            <td><input type="number" name="qty[]"  id="qty1"></td>
-                            <td><input type="number" name="rate" id="rate1"  ></td>
-                            <td><input type="number" name="amount" id="amt1"  class="amount-input"></td>
+                            <td><input type="text" name="hsn[]" value=81082000 required></td>
+                            <td><input type="number" name="qty1"  id="qty1" required></td>
+                            <td><input type="number" name="rate1" id="rate1"  required></td>
+                            <td><input type="number" name="amount1" id="amt1"  readonly required class="amount-input"></td>
                         </tr><tr>
                             <td>2</td>
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
-                                <select id="product2" name="product">
+                                <select id="product2" name="product2">
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -107,14 +108,14 @@
                                 </select>
                             </td>
                             <td><input type="text" name="hsn[]" value=81082000 ></td>
-                            <td><input type="number" name="qty[]" id="qty2" ></td>
+                            <td><input type="number" name="qty2" id="qty2" ></td>
                             <td><input type="number" name="rate2" id="rate2"  ></td>
-                            <td><input type="number" name="amount[]" id="amt2" readonly class="amount-input"></td>
+                            <td><input type="number" name="amount2" id="amt2" readonly class="amount-input"></td>
                         </tr><tr>
                             <td>3</td>
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
-                                <select id="product3" name="product">
+                                <select id="product3" name="product3">
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -128,14 +129,14 @@
                                 </select>
                             </td>
                             <td><input type="text" name="hsn[]" value=81082000 ></td>
-                            <td><input type="number" name="qty[]"  id="qty3"></td>
-                            <td><input type="number" name="rate" id="rate3"  ></td>
-                            <td><input type="number" name="amount[]" id="amt3" readonly class="amount-input"></td>
+                            <td><input type="number" name="qty3"  id="qty3"></td>
+                            <td><input type="number" name="rate3" id="rate3"  ></td>
+                            <td><input type="number" name="amount3" id="amt3" readonly class="amount-input"></td>
                         </tr><tr>
                             <td>4</td>
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
-                                <select id="product4" name="product">
+                                <select id="product4" name="product4">
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -149,35 +150,36 @@
                                 </select>
                             </td>
                             <td><input type="text" name="hsn[]" value=81082000 ></td>
-                            <td><input type="number" name="qty[]" id="qty4" ></td>
-                            <td><input type="number" name="rate" id="rate4"  ></td>
-                            <td><input type="number" name="amount[]" id="amt4" readonly class="amount-input"></td>
+                            <td><input type="number" name="qty4" id="qty4" ></td>
+                            <td><input type="number" name="rate4" id="rate4"  ></td>
+                            <td><input type="number" name="amount4" id="amt4" readonly class="amount-input"></td>
                         </tr>
                     </tbody>
                 </table>
                 {% comment %} <button type="button" id="addRow" class="addRow">Add Row</button> {% endcomment %}
-                <button type="button" id="calculateAmount" class="addRow">Caclulate</button>
+                {% comment %} <button type="button" id="calculateAmount" class="addRow">Caclulate</button> {% endcomment %}
             </div>
             <div class="totals-section">
                 <div class="total-row">
                     <span>Subtotal:</span>
-                    <span id="subtotal">0.00</span>
+                    <span id="subtotal" name="subtotal">0.00</span>
+                    <input type="hidden" name="subtotal" id="hidden-span">
                 </div>
                 <div class="total-row">
                     <span>CGST (9%):</span>
-                    <span id="cgst">0.00</span>
+                    <span id="cgst" name="cgst">0.00</span>
                 </div>
                 <div class="total-row">
                     <span>SGST (9%):</span>
-                    <span id="sgst">0.00</span>
+                    <span id="sgst" name="sgst">0.00</span>
                 </div>
                 <div class="total-row">
                     <span>IGST (18%):</span>
-                    <span id="igst">0.00</span>
+                    <span id="igst" name="igst">0.00</span>
                 </div>
                 <div class="total-row grand-total">
                     <span>Grand Total:</span>
-                    <span id="grand-total">0.00</span>
+                    <span id="grand-total" name="grand">0.00</span>
                 </div>
             </div>
 
@@ -186,15 +188,15 @@
                 <h3>Bank Details</h3>
                 <div class="form-group">
                     <label for="bankName">Bank Name:</label>
-                    <input type="text" id="bankName" name="bankName" >
+                    <input type="text" id="bankName" name="bankName" value="Canara Bank" required >
                 </div>
                 <div class="form-group">
                     <label for="accountNo">Bank Account No:</label>
-                    <input type="text" id="accountNo" name="accountNo" >
+                    <input type="text" id="accountNo" name="accountNo" value="7453922214" required>
                 </div>
                 <div class="form-group">
                     <label for="ifscCode">Bank IFSC Code:</label>
-                    <input type="text" id="ifscCode" name="ifscCode" >
+                    <input type="text" id="ifscCode" name="ifscCode" value="IDIB000V025" required>
                 </div>
             </div>
 
@@ -202,128 +204,11 @@
             <div class="form-section">
                 <button type="submit" class="submit-btn">Generate Invoice</button>
             </div>
-    </div>
+        </form>
+        </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script>
-        var subtotal =0;
-    document.addEventListener('DOMContentLoaded', function() {
-    // Get references to elements
-    //const itemsTable = document.getElementById('itemsTable');
-   // const addRowBtn = document.getElementById('addRow');
-    //const tbody = itemsTable.querySelector('tbody');
-
-    // Counter for row numbers
-    //let rowCount = 1;
-
-    // Function to create new row
-    //function createNewRow() {
-    //    rowCount++;
-     //   const newRow = document.createElement('tr');
-     //   newRow.innerHTML = `
-     //       <td>${rowCount}</td>
-    //        <td><input type="text" name="description[]" ></td>
-    //        <td><input type="text" name="" value=81082000 ></td>
-    //        <td><input type="number" name="qty[]" step="0.001"  class="qty-input"></td>
-    //        <td><input type="number" name="rate" id="rate"  class="rate-input"></td>
-    //        <td><input type="number" name="amount[]" readonly class="amount-input"></td>
-    //        <td><button type="button" class="delete-row">×</button></td>
-     //   `;
-    //    tbody.appendChild(newRow);
-
-        // Add event listeners to new inputs
-     //   addCalculationListeners(newRow);
-    //}
-
-    // Function to add calculation listeners to a row
-    function addCalculationListeners(row) {
-        const qtyInput = row.querySelector('.qty-input');
-        const rateInput = row.querySelector('.rate-input');
-        const amountInput = row.querySelector('.amount-input');
-
-        function calculateAmount() {
-            const qty = parseFloat(qtyInput.value) || 0;
-            const rate = parseFloat(rateInput.value) || 0;
-            const amount = qty * rate;
-            amountInput.value = amount.toFixed(2);
-            calculateTotal();
-        }
-
-        qtyInput.addEventListener('input', calculateAmount);
-        rateInput.addEventListener('input', calculateAmount);
-    }
-
-    // Function to calculate total amount
-    function calculateTotal() {
-        const amounts = Array.from(document.getElementsByClassName('amount-input'));
-        const total = amounts.reduce((sum, input) => {
-            return sum + (parseFloat(input.value) || 0);
-        }, 0);
-        
-        // Calculate GST
-        const cgst = total * 0.09; // 9% CGST
-        const sgst = total * 0.09; // 9% SGST
-        const igst = total * 0.18; // 18% IGST
-        const grandTotal = total + cgst + sgst;
-
-        // Update totals if elements exist
-        updateTotalElement('subtotal', total);
-        updateTotalElement('cgst', cgst);
-        updateTotalElement('sgst', sgst);
-        updateTotalElement('igst', igst);
-        updateTotalElement('grand-total', grandTotal);
-    }
-
-    // Helper function to update total elements
-    function updateTotalElement(id, value) {
-        const element = document.getElementById(id);
-        if (element) {
-            element.textContent = value.toFixed(2);
-        }
-    }
-
-    // Function to delete row
-    function deleteRow(event) {
-        if (event.target.classList.contains('delete-row')) {
-            const row = event.target.closest('tr');
-            row.remove();
-            renumberRows();
-            calculateTotal();
-        }
-    }
-
-    // Function to renumber rows
-    //function renumberRows() {
-   //     const rows = tbody.getElementsByTagName('tr');
-  //      rowCount = rows.length;
-   //     for (let i = 0; i < rows.length; i++) {
-   //         rows[i].cells[0].textContent = i + 1;
-   //     }
-   // }
-
-    // Add event listeners
-   // addRowBtn.addEventListener('click', createNewRow);
-  //  itemsTable.addEventListener('click', deleteRow);
-
-    // Add calculation listeners to initial row
-    const initialRow = tbody.querySelector('tr');
-    if (initialRow) {
-        addCalculationListeners(initialRow);
-    }
-
-    // Form submission handler
-    document.getElementById('invoiceForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Here you can add code to collect all the form data
-        // and generate the final invoice
-        console.log('Form submitted - add your invoice generation logic here');
-    });
-
-    // Async 
-});
-
-{% comment %} var subtotal=0; {% endcomment %}
 $(document).ready(function () {
 
     $('#toName').change(function (){
@@ -391,94 +276,59 @@ $(document).ready(function () {
         }
     });
 
-    {% comment %} $('#qty1').change(function (){
-        let qty = $(this).val();
-        let rate = $("#rate1").val();
-        let total = qty*rate;
-        console.log(qty,rate,total);
-        let amt = $("#amt1").val(total);
-        Calc(total);
-    });
-    $('#qty2').change(function (){
-        let qty = $(this).val();
-        let rate = $("#rate2").val();
-        let total = qty*rate;
-        console.log(qty,rate,total);
-        let amt = $("#amt2").val(total);
-        Calc(total)
-    });
-    $('#qty3').change(function (){
-        let qty = $(this).val();
-        let rate = $("#rate3").val();
-        let total = qty*rate;
-        console.log(qty,rate,total);
-        let amt = $("#amt3").val(total);
-    });
-    $('#qty4').change(function (){
-        let qty = $(this).val();
-        let rate = $("#rate4").val();
-        let total = qty*rate;
-        console.log(qty,rate,total);
-        let amt = $("#amt4").val(total);
-    });
-    function Calc(a) {
-        let subtotal = subtotal+a;
-        console.log(subtotal);
-    } {% endcomment %}
-    // Function to calculate totals
-function calculateTotals() {
-    // Calculate subtotal from all amount fields
-    let subtotal = 0;
-    for(let i = 1; i <= 4; i++) {
-        let amount = parseFloat($("#amt" + i).val()) || 0;
-        subtotal += amount;
+    function calculateTotals() {
+        // Calculate subtotal from all amount fields
+        let subtotal = 0;
+        for(let i = 1; i <= 4; i++) {
+            let amount = parseFloat($("#amt" + i).val()) || 0;
+            subtotal += amount;
+        }
+        
+        // Update subtotal display
+        $("#subtotal").text(subtotal.toFixed(2));
+        
+        // Calculate taxes
+        const cgstRate = 0.09; // 9%
+        const sgstRate = 0.09; // 9%
+        const igstRate = 0.18; // 18%
+        
+        const cgstAmount = subtotal * cgstRate;
+        const sgstAmount = subtotal * sgstRate;
+        const igstAmount = subtotal * igstRate;
+        
+        // Update tax displays
+        $("#cgst").text(cgstAmount.toFixed(2));
+        $("#sgst").text(sgstAmount.toFixed(2));
+        $("#igst").text(igstAmount.toFixed(2));
+        
+        // Calculate and update grand total
+        // Note: Typically you'd apply either CGST+SGST OR IGST, not both
+        // Here I'm including all for demonstration
+        const grandTotal = subtotal + cgstAmount + sgstAmount;
+        $("#grand-total").text(grandTotal.toFixed(2));
     }
-    
-    // Update subtotal display
-    $("#subtotal").text(subtotal.toFixed(2));
-    
-    // Calculate taxes
-    const cgstRate = 0.09; // 9%
-    const sgstRate = 0.09; // 9%
-    const igstRate = 0.18; // 18%
-    
-    const cgstAmount = subtotal * cgstRate;
-    const sgstAmount = subtotal * sgstRate;
-    const igstAmount = subtotal * igstRate;
-    
-    // Update tax displays
-    $("#cgst").text(cgstAmount.toFixed(2));
-    $("#sgst").text(sgstAmount.toFixed(2));
-    $("#igst").text(igstAmount.toFixed(2));
-    
-    // Calculate and update grand total
-    // Note: Typically you'd apply either CGST+SGST OR IGST, not both
-    // Here I'm including all for demonstration
-    const grandTotal = subtotal + cgstAmount + sgstAmount;
-    $("#grand-total").text(grandTotal.toFixed(2));
-}
 
-// Modified quantity change handlers
-$('#qty1, #qty2, #qty3, #qty4').change(function() {
-    const rowNum = this.id.slice(-1); // Get the row number from the ID
-    const qty = parseFloat($(this).val()) || 0;
-    const rate = parseFloat($(`#rate${rowNum}`).val()) || 0;
-    const total = qty * rate;
-    
-    $(`#amt${rowNum}`).val(total.toFixed(2));
-    calculateTotals(); // Update all totals after any change
-});
+    // Modified quantity change handlers
+    $('#qty1, #qty2, #qty3, #qty4').change(function() {
+        const rowNum = this.id.slice(-1); // Get the row number from the ID
+        const qty = parseFloat($(this).val()) || 0;
+        const rate = parseFloat($(`#rate${rowNum}`).val()) || 0;
+        const total = qty * rate;
+        
+        $(`#amt${rowNum}`).val(total.toFixed(2));
+        calculateTotals(); // Update all totals after any change
+    });
 
-// Add change handlers for rate fields as well
-$('#rate1, #rate2, #rate3, #rate4').change(function() {
-    const rowNum = this.id.slice(-1); // Get the row number from the ID
-    const qty = parseFloat($(`#qty${rowNum}`).val()) || 0;
-    const rate = parseFloat($(this).val()) || 0;
-    const total = qty * rate;
-    
-    $(`#amt${rowNum}`).val(total.toFixed(2));
-    calculateTotals(); // Update all totals after any change
-});
+    // Add change handlers for rate fields as well
+    $('#rate1, #rate2, #rate3, #rate4').change(function() {
+        const rowNum = this.id.slice(-1); // Get the row number from the ID
+        const qty = parseFloat($(`#qty${rowNum}`).val()) || 0;
+        const rate = parseFloat($(this).val()) || 0;
+        const total = qty * rate;
+        
+        $(`#amt${rowNum}`).val(total.toFixed(2));
+        calculateTotals(); // Update all totals after any change
+    });
 
 });
 </script>

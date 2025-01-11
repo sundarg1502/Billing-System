@@ -16,4 +16,9 @@ class Company(models.Model):
     mesh_60_80 = models.IntegerField() 
     mesh_80_100 = models.IntegerField() 
 
-
+class Bill(models.Model):
+    toName = models.CharField(max_length=50)
+    invoiceDate = models.DateTimeField()
+    eWayBill = models.CharField(max_length=15)
+    shippingAddress = models.TextField()
+    
