@@ -179,7 +179,7 @@
                 </div>
                 <div class="total-row">
                     <span>IGST (18%):</span>
-                    <span id="igst" name="igst">0.00</span>
+                    <span id="" name=""></span>
                 </div>
                 <div class="total-row grand-total">
                     <span>Grand Total:</span>
@@ -299,12 +299,12 @@ $(document).ready(function () {
         
         const cgstAmount = subtotal * cgstRate;
         const sgstAmount = subtotal * sgstRate;
-        const igstAmount = subtotal * igstRate;
+        //const igstAmount = subtotal * igstRate;
         
         // Update tax displays
         $("#cgst").text(cgstAmount.toFixed(2));
         $("#sgst").text(sgstAmount.toFixed(2));
-        $("#igst").text(igstAmount.toFixed(2));
+       // $("#igst").text(igstAmount.toFixed(2));
         
         // Calculate and update grand total
         // Note: Typically you'd apply either CGST+SGST OR IGST, not both
