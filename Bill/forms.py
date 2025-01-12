@@ -4,6 +4,7 @@ class InvoiceForm(forms.Form):
     toName  = forms.CharField(label="toName",required=True)
     invoiceDate = forms.DateField(label="invoiceDate",required=True)
     ewayBill = forms.CharField(label="ewayBill",required=False)
+    gstin = forms.CharField(required=False)
     shippingAddress = forms.CharField(label="shippingAddress")
     product1 = forms.CharField(label="product1",required=True)
     qty1 = forms.IntegerField()
@@ -21,14 +22,14 @@ class InvoiceForm(forms.Form):
     qty4 = forms.IntegerField(required=False, )
     rate4 = forms.IntegerField(required=False, )
     amount4 = forms.IntegerField(required=False, )
-    subtotal = forms.IntegerField()
-    cgst = forms.FloatField()
-    sgst = forms.FloatField()
-    igst = forms.FloatField()
-    grand = forms.FloatField()
+    # subtotal = forms.IntegerField()
+    # cgst = forms.FloatField()
+    # sgst = forms.FloatField()
+    # igst = forms.FloatField()
+    # grand = forms.FloatField()
     bankName = forms.CharField()
     accountNo = forms.CharField()
     ifscCode = forms.CharField()
 
-    
+
     
