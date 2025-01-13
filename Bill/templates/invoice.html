@@ -10,14 +10,19 @@
 <body>
     <div class="container">
         <header>
+            <img src="{% static "images/SMM LOGO_JPEG.jpg" %}">
             <h1>SRI MURUGAN METAL</h1>
             <p>AN ISO 9001:2015 CERTIFIED COMPANY</p>
             <p>MANUFACTURING AND SUPPLY OF TITANIUM METAL POWDER</p>
-            <p class="address">2/383 East Street,Mathikondan-636805,Virudhunagar(Dist),Tamilnadu</p>
+            <p class="address">2/881, East Street, Mathiyasenai-626005, Virudhunagar(Dist), Tamilnadu</p>
         </header>
         <form method="post">
             {% csrf_token %}
             <div class="form-section">
+                <div class="form-group">
+                    <label for="billno">Bill No:</label>
+                    <input type="text" id="billno" name="bno" value="{{no}}"  >
+                </div>
                 <div class="form-group">
                     <label for="toName">TO:</label>
                     <div class="select-option">
@@ -48,7 +53,7 @@
                     <label for="ewayBill">E-Way Bill No:</label>
                     <input type="text" id="ewayBill" name="ewayBill"  >
                 </div>
-                
+
                 <div class="form-group">
                     <label for="gstno">Party's GST No:</label>
                     <input type="text" id="gstno" name="gstin"  >

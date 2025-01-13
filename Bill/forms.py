@@ -1,6 +1,7 @@
 from django import forms 
-
-class InvoiceForm(forms.Form):
+from Bill.models import *
+class InvoiceForm(forms.ModelForm):
+    bno = forms.IntegerField()
     toName  = forms.CharField(label="toName",required=True)
     invoiceDate = forms.DateField(label="invoiceDate",required=True)
     ewayBill = forms.CharField(label="ewayBill",required=False)
@@ -30,6 +31,18 @@ class InvoiceForm(forms.Form):
     bankName = forms.CharField()
     accountNo = forms.CharField()
     ifscCode = forms.CharField()
+    
+    # def clean(self):
+    #     filledform = super().clean()
+    #     filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
+    
+    class Meta: 
+        model = Bill
+        fields = ['bno','toName',"gstin","invoiceDate","shippingAddress",
+                  "items",
+                #   "qty","amt1",
+                  "bankName","accountNo","ifscCode"]
+
 
 
     

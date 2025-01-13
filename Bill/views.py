@@ -10,12 +10,21 @@ import inflect
 
 def invoice(request):
     company = Company.objects.all()
+    try:
+        bill = Bill.objects.all().last().bno    
+    except:
+        bill = 0
     if request.method == 'POST':
         filledform = InvoiceForm(request.POST)
+        for error in filledform.errors:
+            print(error)
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             generatebill(filled_data)
-    return render(request, "invoice.html",{"company":company})
+            filledform.save()
+            print(filled_data)
+            print("form submitted")
+    return render(request, "invoice.html",{"company":company,"no":bill+1})
 
 def address(request):
     add = Company.objects.get(c_name=request.GET.get('toName')).toAddress
@@ -25,7 +34,7 @@ def address(request):
 def products(request):
     cName = request.GET.get('toName')
     product = request.GET.get('prod')
-    print(product)
+    # print(product)
     company = Company.objects.get(c_name=cName)
     rate = getattr(company,product)
     return JsonResponse({'price':rate})
@@ -36,13 +45,13 @@ def generatebill(datas):
         'date': '11-01-2025',
         'gstin': '29ABCDE1234F1Z5',
         'shipping_address': '123 Main St, Bangalore - 560001',
-        'eway_bill': 'EWB12345'
+        'eway_bill': ''
     }
     items = [
     ]
     try:
         for i in range(1,5):
-            print(i)
+            # print(i)
             if datas[f"product{i}"]:
                 product_name = datas[f"product{i}"]
                 qty = datas[f"qty{i}"]

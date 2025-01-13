@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 class Company(models.Model):
-
     c_name = models.CharField(max_length=50)
     gstIN = models.CharField(max_length=20)
     toAddress = models.TextField()
@@ -16,9 +15,39 @@ class Company(models.Model):
     mesh_60_80 = models.IntegerField() 
     mesh_80_100 = models.IntegerField() 
 
+class Products(models.Model):
+    items = models.CharField(max_length=15)
+    hsn1 = models.CharField(max_length=10)
+    qty1 = models.IntegerField()
+    rate1 = models.IntegerField()
+    amt1 = models.IntegerField()
+    product2 = models.CharField(max_length=15)
+    hsn2 = models.CharField(max_length=10)
+    qty2 = models.IntegerField()
+    rate2 = models.IntegerField()
+    amt2 = models.IntegerField()
+    product2 = models.CharField(max_length=15)
+    hsn3 = models.CharField(max_length=10)
+    qty3 = models.IntegerField()
+    rate3 = models.IntegerField()
+    am31 = models.IntegerField()
+    product4 = models.CharField(max_length=15)
+    hsn4 = models.CharField(max_length=10)
+    qty4 = models.IntegerField()
+    rate4 = models.IntegerField()
+    amt4 = models.IntegerField()
+    grandTotal = models.IntegerField()
+
 class Bill(models.Model):
-    toName = models.CharField(max_length=50)
-    invoiceDate = models.DateTimeField()
-    eWayBill = models.CharField(max_length=15)
-    shippingAddress = models.TextField()
-    
+    bno = models.IntegerField() 
+    toName = models.CharField(max_length=150)
+    gstin = models.CharField(max_length=15)
+    invoiceDate = models.DateField()
+    # eWayBill = models.CharField(max_length=15)
+    shippingAddress = models.CharField(max_length=50)
+    items = models.ForeignKey(Products,on_delete=models.CASCADE)
+    # qty = models.IntegerField()
+    # amount = models.IntegerField()  
+    bankName = models.CharField(max_length=15)
+    accNo = models.CharField(max_length=12)  
+    ifscCode = models.CharField(max_length=12)  
