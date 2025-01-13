@@ -39,7 +39,7 @@ class InvoiceForm(forms.ModelForm):
     class Meta: 
         model = Bill
         fields = ['bno','toName',"gstin","invoiceDate","shippingAddress",
-                  "items",
+                  # "product",
                 #   "qty","amt1",
                   "bankName","accountNo","ifscCode"]
 

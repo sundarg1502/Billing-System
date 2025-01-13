@@ -5,8 +5,8 @@ from Bill.forms import *
 from Bill.forms import *
 from docx import Document
 from datetime import datetime
-from random import randint
 import inflect
+import os
 
 def invoice(request):
     company = Company.objects.all()
@@ -21,9 +21,34 @@ def invoice(request):
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             generatebill(filled_data)
-            filledform.save()
-            print(filled_data)
-            print("form submitted")
+            bill_id=filledform.save()
+
+            try:
+                product_to_append = ""
+                qty_to_append = ""
+                rate_to_append = ""
+                amt_to_append = ""
+                total=0
+                for i in range(1,5):
+                    print(i)
+                    try:
+                        if filled_data[f"product{i}"]:
+                            product_to_append += str(filled_data[f"product{i}"])+","
+                            qty_to_append += str(filled_data[f"qty{i}"])+","
+                            rate_to_append += str(filled_data[f"rate{i}"])+','
+                            amt_to_append += str(filled_data[f"amount{i}"])+','
+                            total += int(filled_data[f"amount{i}"])
+                    except:
+                        pass
+                gt=0
+                gt = total + (total*0.18)
+                # print(bill_id)
+                Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
+                # print(f"data from the lop produtc {product_to_append} and qty{qty_to_append} rate {rate_to_append} totla {total} gt is {gt}")
+            except Exception as e :
+                print(e)
+            # print(filled_data)
+            # print("form submitted"),
     return render(request, "invoice.html",{"company":company,"no":bill+1})
 
 def address(request):
@@ -53,12 +78,16 @@ def generatebill(datas):
         for i in range(1,5):
             # print(i)
             if datas[f"product{i}"]:
-                product_name = datas[f"product{i}"]
+                # product_name = datas[f"product{i}"]
+                product_name = datas[f"product{i}"].split("_")
+                product_name = product_name[1:] + [" Mesh"]
+                print(product_name)
                 qty = datas[f"qty{i}"]
                 rate = datas[f"rate{i}"]
                 product = (product_name,"81082000",qty,rate)
                 items.append(product)
-    except:
+    except Exception as e:
+        # print(e)
         pass
 
     doc = Document("static/Template.docx")
@@ -68,14 +97,14 @@ def generatebill(datas):
     # table.rows[1].cells[3].text = f"To : {datas.get('toName', '')},{datas.get('shippingAddress', '')}"
     to_bold = table.rows[1].cells[3]
     to_cell = to_bold.paragraphs[0].clear()
-    to_cell.add_run("To :").bold=True
+    to_cell.add_run("To : ").bold=True
     to_cell.add_run(f"{datas.get('toName', '')},{datas.get('shippingAddress', '')}")
 
-    table.rows[1].cells[7].text = "1234"
+    table.rows[1].cells[7].text = str(datas.get("bno",""))
     table.rows[2].cells[7].text = date
     gst_bold = table.rows[3].cells[0]
     gst_cell = gst_bold.paragraphs[0].clear()
-    gst_cell.add_run("PARTY'S GSTIN NO:").bold=True
+    gst_cell.add_run("PARTY'S GSTIN NO : ").bold=True
     gst_cell.add_run(datas.get('gstin', ''))
     
     if invoice_details.get('eway_bill'):
@@ -89,7 +118,7 @@ def generatebill(datas):
         amount = float(qty) * float(rate)
         total_amount += amount
         row.cells[0].text = str(idx)
-        row.cells[1].text = desc+" Titanium Powder"
+        row.cells[1].text = desc+[" Titanium Powder"]
         row.cells[5].text = str(hsn)
         row.cells[6].text = str(qty)+" KG"
         row.cells[8].text = str(rate)
@@ -108,6 +137,8 @@ def generatebill(datas):
     table.rows[14].cells[9].text = f"{total_after_tax:.2f}"
     
     p = inflect.engine()
-    table.rows[15].cells[2].text =  p.number_to_words(total_after_tax) +" rupees only"
+    number_to_text = p.number_to_words(total_after_tax).split("point")[0]
+    table.rows[15].cells[2].text =  number_to_text +" rupees only"
 
-    doc.save(f"static/invoices/{datas.get('toName', '')}_INV_{randint(1,100)}.docx")
+    doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
+    os.startfile(f"D:/self/Business/SMM/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")
