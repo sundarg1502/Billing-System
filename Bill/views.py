@@ -21,7 +21,7 @@ def invoice(request):
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             generatebill(filled_data)
-            bill_id=filledform.save()
+            # bill_id=filledform.save()
 
             try:
                 product_to_append = ""
@@ -30,7 +30,7 @@ def invoice(request):
                 amt_to_append = ""
                 total=0
                 for i in range(1,5):
-                    print(i)
+                    # print(i)
                     try:
                         if filled_data[f"product{i}"]:
                             product_to_append += str(filled_data[f"product{i}"])+","
@@ -43,12 +43,14 @@ def invoice(request):
                 gt=0
                 gt = total + (total*0.18)
                 # print(bill_id)
-                Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
+                # Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
                 # print(f"data from the lop produtc {product_to_append} and qty{qty_to_append} rate {rate_to_append} totla {total} gt is {gt}")
             except Exception as e :
                 print(e)
             # print(filled_data)
             # print("form submitted"),
+        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":total*0.09})
+
     return render(request, "invoice.html",{"company":company,"no":bill+1})
 
 def address(request):
@@ -81,7 +83,7 @@ def generatebill(datas):
                 # product_name = datas[f"product{i}"]
                 product_name = datas[f"product{i}"].split("_")
                 product_name = product_name[1:] + [" Mesh"]
-                print(product_name)
+                # print(product_name)
                 qty = datas[f"qty{i}"]
                 rate = datas[f"rate{i}"]
                 product = (product_name,"81082000",qty,rate)
@@ -141,4 +143,4 @@ def generatebill(datas):
     table.rows[15].cells[2].text =  number_to_text +" rupees only"
 
     doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
-    os.startfile(f"D:/self/Business/SMM/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")
+    # os.startfile(f"D:/self/Business/SMM/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")

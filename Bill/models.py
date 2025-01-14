@@ -22,7 +22,7 @@ class Bill(models.Model):
     gstin = models.CharField(max_length=15)
     invoiceDate = models.DateField()
     # eWayBill = models.CharField(max_length=15)
-    shippingAddress = models.CharField(max_length=50)
+    shippingAddress = models.CharField(max_length=90)
     # qty = models.IntegerField()
     # amount = models.IntegerField()  
     bankName = models.CharField(max_length=15)

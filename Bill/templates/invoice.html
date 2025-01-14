@@ -19,6 +19,9 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-section">
+                {% comment %} {% if form.errors.shippingAddress %} {% endcomment %}
+                    <h1>{{form.product1.value }} date<h1>
+                {% comment %} {% endif %} {% endcomment %}
                 <div class="form-group">
                     <label for="billno">Bill No:</label>
                     <input type="text" id="billno" name="bno" value="{{no}}"  >
@@ -26,10 +29,10 @@
                 <div class="form-group">
                     <label for="toName">TO:</label>
                     <div class="select-option">
-                        <select id='toName' name="toName" required>
+                        <select id='toName' name="toName" required value="">
                             <option value="">select One</option>
                             {% for comp in company %}
-                                <option value="{{comp.c_name}}" >{{comp.c_name}}</option>
+                                <option value="{{comp.c_name}}" {% if comp.c_name == form.toName.value %}selected{% endif %} >{{comp.c_name}}</option>
                             {% endfor %}
                         </select>
                         {% comment %} <button type="submit" class="fill" id="fill">Auto Fill</button> {% endcomment %}
@@ -45,7 +48,7 @@
                     </div> {% endcomment %}
                     <div class="form-group">
                         <label for="invoiceDate">Invoice Date:</label>
-                        <input type="date" id="invoiceDate" required name="invoiceDate"   >
+                        <input type="date" id="invoiceDate" required name="invoiceDate"  value="{{ form.invoiceDate.value|default:'' }}">
                     </div>
                 </div>
 
@@ -56,12 +59,12 @@
 
                 <div class="form-group">
                     <label for="gstno">Party's GST No:</label>
-                    <input type="text" id="gstno" name="gstin"  >
+                    <input type="text" id="gstno" name="gstin" value="{{form.gstin.value | default:""}}" >
                 </div>
 
                 <div class="form-group">
                     <label for="shippingAddress1">Shipping Address:</label>
-                    <input type="text" id="shippingAddress" name="shippingAddress" required rows="3">
+                    <input type="text" id="shippingAddress" name="shippingAddress" required value="{{form.shippingAddress.value | default:""}}">
                 </div>
             </div>
 
@@ -84,6 +87,9 @@
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product1" name="product1" required>
+                                    {% if form.product1.value %}
+                                    <option value="{{form.product1.value}}"> {{form.product1.value}}</option>
+                                    {% endif %}
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -97,14 +103,17 @@
                                 </select>
                             </td>
                             <td><input type="text" name="hsn[]" value=81082000 required></td>
-                            <td><input type="number" name="qty1"  id="qty1" required></td>
-                            <td><input type="number" name="rate1" id="rate1"  required></td>
-                            <td><input type="number" name="amount1" id="amt1"  readonly required class="amount-input"></td>
+                            <td><input type="number" name="qty1"  id="qty1" required value="{{form.qty1.value}}"></td>
+                            <td><input type="number" name="rate1" id="rate1"  required value="{{form.rate1.value}}"></td>
+                            <td><input type="number" name="amount1" id="amt1"  readonly required class="amount-input" value="{{form.amount1.value}}"></td>
                         </tr><tr>
                             <td>2</td>
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product2" name="product2">
+                                    {% if form.product2.value %}
+                                    <option value="{{form.product2.value}}"> {{form.product2.value}}</option>
+                                    {% endif %}
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -118,14 +127,17 @@
                                 </select>
                             </td>
                             <td><input type="text" name="hsn[]" value=81082000 ></td>
-                            <td><input type="number" name="qty2" id="qty2" ></td>
-                            <td><input type="number" name="rate2" id="rate2"  ></td>
-                            <td><input type="number" name="amount2" id="amt2" readonly class="amount-input"></td>
+                            <td><input type="number" name="qty2" id="qty2"  value="{{form.qty2.value}}"></td>
+                            <td><input type="number" name="rate2" id="rate2"   value="{{form.rate2.value}}"></td>
+                            <td><input type="number" name="amount2" id="amt2" readonly class="amount-input" value="{{form.amount2.value}}"></td>
                         </tr><tr>
                             <td>3</td>
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product3" name="product3">
+                                    {% if form.product3.value %}
+                                    <option value="{{form.product3.value}}"> {{form.product3.value}}</option>
+                                    {% endif %}
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -139,14 +151,17 @@
                                 </select>
                             </td>
                             <td><input type="text" name="hsn[]" value=81082000 ></td>
-                            <td><input type="number" name="qty3"  id="qty3"></td>
-                            <td><input type="number" name="rate3" id="rate3"  ></td>
-                            <td><input type="number" name="amount3" id="amt3" readonly class="amount-input"></td>
+                            <td><input type="number" name="qty3"  id="qty3" value = "{{form.qty3.value}}"></td>
+                            <td><input type="number" name="rate3" id="rate3"  value = "{{form.rate3.value}}" ></td>
+                            <td><input type="number" name="amount3" id="amt3" readonly class="amount-input" value = "{{form.amount3.value}}"></td>
                         </tr><tr>
                             <td>4</td>
                             <td>
                                 {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product4" name="product4">
+                                    {% if form.product4.value %}
+                                    <option value="{{form.product4.value}}"> {{form.product4.value}}</option>
+                                    {% endif %}
                                     <option value="">--Select Product--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
@@ -160,9 +175,9 @@
                                 </select>
                             </td>
                             <td><input type="text" name="hsn[]" value=81082000 ></td>
-                            <td><input type="number" name="qty4" id="qty4" ></td>
-                            <td><input type="number" name="rate4" id="rate4"  ></td>
-                            <td><input type="number" name="amount4" id="amt4" readonly class="amount-input"></td>
+                            <td><input type="number" name="qty4" id="qty4"  value+{{form.qty4.value}}></td>
+                            <td><input type="number" name="rate4" id="rate4"  value+{{form.rate4.value}} ></td>
+                            <td><input type="number" name="amount4" id="amt4" readonly class="amount-input" value+{{form.amount4.value}}></td>
                         </tr>
                     </tbody>
                 </table>
@@ -172,15 +187,33 @@
             <div class="totals-section">
                 <div class="total-row">
                     <span>Subtotal:</span>
-                    <span id="subtotal" name="subtotal">0.00</span>
+                    <span id="subtotal" name="subtotal">
+                        {% if subtotal%}
+                        {{subtotal}}.00
+                        {% else %}
+                        0.00
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="total-row">
                     <span>CGST (9%):</span>
-                    <span id="cgst" name="cgst">0.00</span>
+                    <span id="cgst" name="cgst">
+                        {% if gst%}
+                        {{gst}}
+                        {% else %}
+                        0.00
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="total-row">
                     <span>SGST (9%):</span>
-                    <span id="sgst" name="sgst">0.00</span>
+                    <span id="sgst" name="sgst">
+                        {% if gst%}
+                        {{gst}}
+                        {% else %}
+                        0.00
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="total-row">
                     <span>IGST (18%):</span>
@@ -188,7 +221,13 @@
                 </div>
                 <div class="total-row grand-total">
                     <span>Grand Total:</span>
-                    <span id="grand-total" name="grand">0.00</span>
+                    <span id="grand-total" name="grand">
+                        {% if grand%}
+                        {{grand}}
+                        {% else %}
+                        0.00
+                        {% endif %}
+                    </span>
                 </div>
             </div>
 
@@ -197,23 +236,19 @@
                 <h3>Bank Details</h3>
                 <div class="form-group">
                     <label for="bankName">Bank Name:</label>
-                    <input type="text" id="bankName" name="bankName" value="Canara Bank" required >
+                    <input type="text" id="bankName" name="bankName" value="{{form.bankName.value |default:'Canara Bank'}}" required >
                 </div>
                 <div class="form-group">
                     <label for="accountNo">Bank Account No:</label>
-                    <input type="text" id="accountNo" name="accountNo" value="7453922214" required>
+                    <input type="text" id="accountNo" name="accountNo" value="{{form.accountNo.value |default:'7453922214'}}" required>
                 </div>
                 <div class="form-group">
                     <label for="ifscCode">Bank IFSC Code:</label>
-                    <input type="text" id="ifscCode" name="ifscCode" value="IDIB000V025" required>
+                    <input type="text" id="ifscCode" name="ifscCode" value="{{form.ifscCode.value |default:'IDIB000V025'}}" required>
                 </div>
             </div>
 
             <!-- Submit Button -->
-            <div class="form-section">
-                <button type="submit" class="submit-btn">Sample Invoice</button>
-            </div>
-
             <div class="form-section">
                 <button type="submit" class="submit-btn">Generate Invoice</button>
             </div>
