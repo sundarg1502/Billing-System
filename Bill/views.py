@@ -2,11 +2,11 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from Bill.models import *
 from Bill.forms import *
-from Bill.forms import *
 from docx import Document
 from datetime import datetime
 import inflect
 import os
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 def invoice(request):
     company = Company.objects.all()
@@ -20,8 +20,8 @@ def invoice(request):
             print(error)
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
-            generatebill(filled_data)
-            # bill_id=filledform.save()
+            success = generatebill(filled_data)
+            print(success)
 
             try:
                 product_to_append = ""
@@ -42,14 +42,16 @@ def invoice(request):
                         pass
                 gt=0
                 gt = total + (total*0.18)
-                # print(bill_id)
-                # Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
+                if success is False:
+                    print("message to update the db")
+                    bill_id=filledform.save() 
+                    Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
                 # print(f"data from the lop produtc {product_to_append} and qty{qty_to_append} rate {rate_to_append} totla {total} gt is {gt}")
             except Exception as e :
                 print(e)
             # print(filled_data)
             # print("form submitted"),
-        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":total*0.09})
+        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":total*0.09 ,"fileerror":success})
 
     return render(request, "invoice.html",{"company":company,"no":bill+1})
 
@@ -126,21 +128,34 @@ def generatebill(datas):
         row.cells[8].text = str(rate)
         row.cells[9].text = f"{amount:.2f}"
     
-    table.rows[10].cells[9].text = f"{total_amount:.2f}"  
+    table.rows[10].cells[9].text = f"{total_amount:.2f}" # Set horizontal alignment (right)
+    paragraph = table.rows[10].cells[9].paragraphs[0]
+    paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
     
     cgst = total_amount * 0.09
     sgst = total_amount * 0.09
     # igst = total_amount * 0.18
-    
-    table.rows[11].cells[9].text = f"{cgst:.2f}"  
-    table.rows[12].cells[9].text = f"{sgst:.2f}"   
-    
+
+    # Set text and apply alignment for CGST
+    table.rows[11].cells[9].text = f"{cgst:.2f}"
+    table.rows[11].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  # Right alignment
+
+    # Set text and apply alignment for SGST
+    table.rows[12].cells[9].text = f"{sgst:.2f}"
+    table.rows[12].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  # Right alignment
+
+    # Set text and apply alignment for Total After Tax
     total_after_tax = total_amount + cgst + sgst
     table.rows[14].cells[9].text = f"{total_after_tax:.2f}"
-    
+    table.rows[14].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  # Right alignment
+
     p = inflect.engine()
     number_to_text = p.number_to_words(total_after_tax).split("point")[0]
     table.rows[15].cells[2].text =  number_to_text +" rupees only"
-
-    doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
-    # os.startfile(f"D:/self/Business/SMM/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")
+    try:
+        doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
+        os.startfile(f"D:/self/Business/SMM/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")
+        return False
+    except Exception as e:
+        print(e)
+    return True
