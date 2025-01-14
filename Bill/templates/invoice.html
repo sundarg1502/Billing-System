@@ -12,7 +12,7 @@
         <header>
             <img src="{% static "images/SMM LOGO_JPEG.jpg" %}">
             <h1>SRI MURUGAN METAL</h1>
-            <a href="{% url 'Bill:invoice' %}" class="submit-btn" style="position:absolute;text-decoration:none;top:0;right:0;width:85px">Clear</a>
+            <a href="{% url 'Bill:invoice' %}" class="clear-btn" >Clear</a>
             <p>AN ISO 9001:2015 CERTIFIED COMPANY</p>
             <p>MANUFACTURING AND SUPPLY OF TITANIUM METAL POWDER</p>
             <p class="address">2/881, East Street, Mathiyasenai-626005, Virudhunagar(Dist), Tamilnadu</p>
@@ -28,6 +28,12 @@
                 {% comment %} {% if form.errors.shippingAddress %} {% endcomment %}
                     {% comment %} <h1>{{form.product1.value }} date<h1> {% endcomment %}
                 {% comment %} {% endif %} {% endcomment %}
+                <label>
+                    <input type="radio" name="dbupdate" value="yes" required > Update database
+                </label>
+                <label>
+                    <input type="radio" name="dbupdate" value="no"> Wait for E way Bill No
+                </label><br>
                 <div class="form-group">
                     <label for="billno">Bill No:</label>
                     <input type="text" id="billno" name="bno" value="{{form.bno.value|default:no}}"  >
@@ -60,7 +66,7 @@
 
                 <div class="form-group">
                     <label for="ewayBill">E-Way Bill No:</label>
-                    <input type="text" id="ewayBill" name="ewayBill"  >
+                    <input type="text" id="ewayBill" name="eWayBill"  >
                 </div>
 
                 <div class="form-group">
@@ -96,7 +102,7 @@
                                     {% if form.product1.value %}
                                     <option value="{{form.product1.value}}"> {{form.product1.value}}</option>
                                     {% endif %}
-                                    <option value="">--Select Product--</option>
+                                    <option value="">--Select--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
                                     <option value="mesh_60">60 mesh</option>
@@ -120,7 +126,7 @@
                                     {% if form.product2.value %}
                                     <option value="{{form.product2.value}}"> {{form.product2.value}}</option>
                                     {% endif %}
-                                    <option value="">--Select Product--</option>
+                                    <option value="">--Select--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
                                     <option value="mesh_60">60 mesh</option>
@@ -144,7 +150,7 @@
                                     {% if form.product3.value %}
                                     <option value="{{form.product3.value}}"> {{form.product3.value}}</option>
                                     {% endif %}
-                                    <option value="">--Select Product--</option>
+                                    <option value="">--Select--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
                                     <option value="mesh_60">60 mesh</option>
@@ -168,7 +174,7 @@
                                     {% if form.product4.value %}
                                     <option value="{{form.product4.value}}"> {{form.product4.value}}</option>
                                     {% endif %}
-                                    <option value="">--Select Product--</option>
+                                    <option value="">--Select--</option>
                                     <option value="mesh_30">30 Mesh</option>
                                     <option value="mesh_40">40Mesh</option>
                                     <option value="mesh_60">60 mesh</option>
@@ -246,7 +252,7 @@
                 </div>
                 <div class="form-group">
                     <label for="accountNo">Bank Account No:</label>
-                    <input type="text" id="accountNo" name="accountNo" value="{{form.accountNo.value |default:'7453922214'}}" required>
+                    <input type="text" id="accountNo" name="accNo" value="{{form.accountNo.value |default:'7453922214'}}" required>
                 </div>
                 <div class="form-group">
                     <label for="ifscCode">Bank IFSC Code:</label>

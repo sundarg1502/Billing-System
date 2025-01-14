@@ -16,11 +16,17 @@ def invoice(request):
         bill = 0
     if request.method == 'POST':
         filledform = InvoiceForm(request.POST)
+        total=0
+        gt=0
+        success=True
         for error in filledform.errors:
             print(error)
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             success = generatebill(filled_data)
+            print(filled_data)
+            for fata in filled_data:
+                print(f"data from the form {fata}")
             print(success)
 
             try:
@@ -28,7 +34,6 @@ def invoice(request):
                 qty_to_append = ""
                 rate_to_append = ""
                 amt_to_append = ""
-                total=0
                 for i in range(1,5):
                     # print(i)
                     try:
@@ -40,9 +45,8 @@ def invoice(request):
                             total += int(filled_data[f"amount{i}"])
                     except:
                         pass
-                gt=0
                 gt = total + (total*0.18)
-                if success is False:
+                if success is False and filled_data['dbupdate']=="yes":
                     print("message to update the db")
                     bill_id=filledform.save() 
                     Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
@@ -51,7 +55,7 @@ def invoice(request):
                 print(e)
             # print(filled_data)
             # print("form submitted"),
-        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":total*0.09 ,"fileerror":success})
+        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":F"{total*0.09:.2f}" ,"fileerror":success})
 
     return render(request, "invoice.html",{"company":company,"no":bill+1})
 
@@ -111,8 +115,9 @@ def generatebill(datas):
     gst_cell.add_run("PARTY'S GSTIN NO : ").bold=True
     gst_cell.add_run(datas.get('gstin', ''))
     
-    if invoice_details.get('eway_bill'):
-        table.rows[3].cells[7].text = invoice_details['eway_bill']
+    # print(datas['eWayBill'])
+    if datas.get('eWayBill'):
+        table.rows[3].cells[7].text = datas['eWayBill']
     
     table.rows[4].cells[4].text = f"Shipping address : "
 

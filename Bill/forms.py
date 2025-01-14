@@ -1,10 +1,11 @@
 from django import forms 
 from Bill.models import *
 class InvoiceForm(forms.ModelForm):
+    dbupdate = forms.CharField()
     bno = forms.IntegerField()
     toName  = forms.CharField(label="toName",required=True)
     invoiceDate = forms.DateField(label="invoiceDate",required=True)
-    ewayBill = forms.CharField(label="ewayBill",required=False)
+    eWayBill = forms.CharField(label="ewayBill",required=False)
     gstin = forms.CharField(required=False)
     shippingAddress = forms.CharField(label="shippingAddress")
     product1 = forms.CharField(label="product1",required=True)
@@ -29,7 +30,7 @@ class InvoiceForm(forms.ModelForm):
     # igst = forms.FloatField()
     # grand = forms.FloatField()
     bankName = forms.CharField()
-    accountNo = forms.CharField()
+    accNo = forms.CharField()
     ifscCode = forms.CharField()
     
     # def clean(self):
@@ -38,10 +39,10 @@ class InvoiceForm(forms.ModelForm):
     
     class Meta: 
         model = Bill
-        fields = ['bno','toName',"gstin","invoiceDate","shippingAddress",
+        fields = ['bno','toName',"gstin","invoiceDate","shippingAddress","eWayBill",
                   # "product",
                 #   "qty","amt1",
-                  "bankName","accountNo","ifscCode"]
+                  "bankName","accNo","ifscCode"]
 
 
 
