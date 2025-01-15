@@ -1,243 +1,294 @@
-/* Global Styles */
-:root {
-    --primary-color: #2c3e50;
-    --secondary-color: #34495e;
-    --accent-color: #3498db;
-    --success-color: #2ecc71;
-    --danger-color: #e74c3c;
-    --background-color: #f5f6fa;
-    --border-color: #dcdde1;
-    --text-color: #2d3436;
-    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Modern Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: #f0f4f8;
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Unique Header Design */
+header {
+  text-align: center;
+  padding: 2rem 0;
+  position: relative;
+  background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+header img {
+  max-width: 180px;
+  margin-bottom: 1rem;
+}
+
+header h1 {
+  color: #1a365d;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+header p {
+  color: #4a5568;
+  margin: 0.3rem 0;
+}
+
+.address {
+  font-style: italic;
+  color: #718096;
+}
+
+/* Form Sections with Unique Design */
+.form-section {
+  background: white;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Radio Group Styling */
+.radio-group {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+  background: #edf2f7;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.radio-option input[type="radio"] {
+  appearance: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid #4a5568;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.radio-option input[type="radio"]:checked {
+  border-color: #2b6cb0;
+}
+
+.radio-option input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.6rem;
+  height: 0.6rem;
+  background: #2b6cb0;
+  border-radius: 50%;
+}
+
+/* Form Columns Layout */
+.form-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Input Fields Styling */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+/* Table Styling */
+#itemsTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5rem 0;
+}
+
+#itemsTable th {
+  background: #2d3748;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+}
+
+#itemsTable th:first-child {
+  border-top-left-radius: 8px;
+}
+
+#itemsTable th:last-child {
+  border-top-right-radius: 8px;
+}
+
+#itemsTable td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+#itemsTable tbody tr:hover {
+  background: #f7fafc;
+}
+
+/* Bottom Sections */
+.bottom-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.bank-details,
+.totals-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Totals Section */
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.grand-total {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #2d3748;
+  border-bottom: none;
+  margin-top: 1rem;
+}
+
+/* Submit Button */
+.submit-btn {
+  background: #2b6cb0;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  display: block;
+}
+
+.submit-btn:hover {
+  background: #2c5282;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Clear Button */
+.clear-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  background: #e53e3e;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.clear-btn:hover {
+  background: #c53030;
+}
+
+/* Unique Features */
+/* Floating Label Animation */
+.form-group {
+  position: relative;
+}
+
+/* Success/Error Messages */
+.form-section[style*="background-color:#d4edda"],
+.form-section[style*="background-color:#f8d7da"],
+.form-section[style*="background-color:#fff3cd"] {
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+      transform: translateY(-20px);
+      opacity: 0;
   }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  to {
+      transform: translateY(0);
+      opacity: 1;
   }
-  
-  body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bottom-sections {
+      grid-template-columns: 1fr;
   }
   
   .container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-  }
-  
-  /* Header Styles */
-  header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid var(--border-color);
-  }
-  
-  header img {
-    max-width: 200px;
-    margin-bottom: 1rem;
-  }
-  
-  header h1 {
-    color: var(--primary-color);
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .clear-btn{
-position:absolute;
-    text-decoration:none;
-    width:85px;
-    height:30px;
-    background-color: var(--accent-color);
-    color: white;
-    margin-top: -200px;
-    margin-left: 500px;
-    /* padding: 1rem 2rem; */
-    border: none;
-    border-radius: 4%;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease; 
-  }
-  
-  header p {
-    color: var(--secondary-color);
-    margin-bottom: 0.3rem;
-  }
-  
-  .address {
-    font-style: italic;
-    color: var(--secondary-color);
-  }
-  
-  /* Form Section Styles */
-  .form-section {
-    background: white;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-  }
-  
-  .form-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1.2rem;
-    width: 100%;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--primary-color);
-    font-weight: 500;
-  }
-  
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-  }
-  
-  input[type="text"]:focus,
-  input[type="number"]:focus,
-  input[type="date"]:focus,
-  select:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
-  }
-  
-  /* Radio Button Styles */
-  input[type="radio"] {
-    margin-right: 0.5rem;
-  }
-  
-  /* Table Styles */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-  }
-  
-  th {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 1rem;
-    text-align: left;
-  }
-  
-  td {
-    padding: 0.8rem;
-    border: 1px solid var(--border-color);
-  }
-  
-  td input,
-  td select {
-    margin: 0;
-    padding: 0.5rem;
-  }
-  
-  /* Totals Section */
-  .totals-section {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 6px;
-    margin: 1.5rem 0;
-  }
-  
-  .total-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .grand-total {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: var(--primary-color);
-    border-bottom: none;
-    margin-top: 1rem;
-  }
-  
-  /* Button Styles */
-  .submit-btn {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-btn:hover {
-    background-color: #2980b9;
-  }
-  
-  /* Error Message Styles */
-  .form-section[style*="background-color:#f8d7da"] {
-    border-color: var(--danger-color);
-  }
-  
-  .form-section[style*="background-color:#f8d7da"] h3 {
-    color: var(--danger-color);
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .container {
       margin: 1rem;
       padding: 1rem;
-    }
-  
-    .form-row {
-      flex-direction: column;
-    }
-  
-    table {
-      display: block;
-      overflow-x: auto;
-    }
-  
-    th, td {
-      min-width: 120px;
-    }
   }
   
-  /* Print Styles */
-  @media print {
-    .container {
-      margin: 0;
-      padding: 1rem;
-      box-shadow: none;
-    }
-  
-    .submit-btn,
-    button[type="button"] {
-      display: none;
-    }
+  .form-columns {
+      grid-template-columns: 1fr;
   }
+}

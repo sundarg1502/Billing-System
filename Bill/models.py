@@ -15,6 +15,9 @@ class Company(models.Model):
     mesh_60_80 = models.IntegerField() 
     mesh_80_100 = models.IntegerField() 
 
+    def __str__(self):
+        return self.c_name
+
 
 class Bill(models.Model):
     bno = models.IntegerField() 
@@ -29,6 +32,9 @@ class Bill(models.Model):
     bankName = models.CharField(max_length=15)
     accNo = models.CharField(max_length=12)  
     ifscCode = models.CharField(max_length=12)  
+
+    def __str__(self):
+        return f"{self.bno}--{self.toName}"
 
 class Products(models.Model):
     bill = models.ForeignKey(Bill,on_delete=models.CASCADE)

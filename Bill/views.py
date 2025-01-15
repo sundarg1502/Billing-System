@@ -14,39 +14,30 @@ def invoice(request):
         bill = Bill.objects.all().last().bno    
     except:
         bill = 0
-    # print(bill)
-    # sample = Bill.objects.get(bno=6)
-    # print(f"sample data{sample}")
     if request.method == 'POST':
         filledform = InvoiceForm(request.POST)
-        # print(filledform)
         total=0
         gt=0
         success=True
-        # for error in filledform.errors:
-        #     print(error)
         bill_status = ""
         db_status = ""
+        uniquebno = ""
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             success = generatebill(filled_data)
-            if success:
-                bill_status = "success"
-            else:
-                bill_status = "not success"
-
-            print(filled_data)
-            for fata in filled_data:
-                print(f"data from the form {fata}")
-            # print(success)
-
+            bill_status = "success" if success else "not success"
+            ch_bno = filledform.cleaned_data.get('bno')
+            try:
+                sample = Bill.objects.get(bno=ch_bno)
+                uniquebno = "not unique"
+            except:
+                uniquebno = "unique"
             try:
                 product_to_append = ""
                 qty_to_append = ""
                 rate_to_append = ""
                 amt_to_append = ""
                 for i in range(1,5):
-                    # print(i)
                     try:
                         if filled_data[f"product{i}"]:
                             product_to_append += str(filled_data[f"product{i}"])+","
@@ -58,18 +49,13 @@ def invoice(request):
                         pass
                 gt = total + (total*0.18)
                 db_status="not success"
-                if filled_data['dbupdate']=="yes":
-                    print("message to update the db")
+                if filled_data['dbupdate']=="yes" and uniquebno=="unique":
                     bill_id=filledform.save() 
                     Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
                     db_status ="success"
-                # else:
-                # print(f"data from the lop produtc {product_to_append} and qty{qty_to_append} rate {rate_to_append} totla {total} gt is {gt}")
             except Exception as e :
                 print(e)
-            # print(filled_data)
-            # print("form submitted"),
-        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":F"{total*0.09:.2f}" ,"fileerror":bill_status,"dbstatus":db_status})
+        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":F"{total*0.09:.2f}" ,"fileerror":bill_status,"dbstatus":db_status,"ubno":uniquebno})
 
     return render(request, "invoice.html",{"company":company,"no":bill+1})
 
@@ -78,14 +64,9 @@ def address(request):
     gst = Company.objects.get(c_name=request.GET.get('toName')).gstIN
     return JsonResponse({'add':add,'gst':gst})
 
-def billno(request):
-    print(request.GET.get("bno"))
-    return JsonResponse({'add':"none"})
-
 def products(request):
     cName = request.GET.get('toName')
     product = request.GET.get('prod')
-    # print(product)
     company = Company.objects.get(c_name=cName)
     rate = getattr(company,product)
     return JsonResponse({'price':rate})
@@ -95,12 +76,9 @@ def generatebill(datas):
     ]
     try:
         for i in range(1,5):
-            # print(i)
             if datas[f"product{i}"]:
-                # product_name = datas[f"product{i}"]
                 product_name = datas[f"product{i}"].split("_")
                 product_name = product_name[1:] + [" Mesh"]
-                # print(product_name)
                 qty = datas[f"qty{i}"]
                 rate = datas[f"rate{i}"]
                 product = (product_name,"81082000",qty,rate)
@@ -113,7 +91,6 @@ def generatebill(datas):
     table = doc.tables[0]  
     date = datas["invoiceDate"].strftime("%d-%m-%Y")
     
-    # table.rows[1].cells[3].text = f"To : {datas.get('toName', '')},{datas.get('shippingAddress', '')}"
     to_bold = table.rows[1].cells[3]
     to_cell = to_bold.paragraphs[0].clear()
     to_cell.add_run("To : ").bold=True
@@ -126,7 +103,6 @@ def generatebill(datas):
     gst_cell.add_run("PARTY'S GSTIN NO : ").bold=True
     gst_cell.add_run(datas.get('gstin', ''))
     
-    # print(datas['eWayBill'])
     if datas.get('eWayBill'):
         table.rows[3].cells[7].text = datas['eWayBill']
     
@@ -161,20 +137,15 @@ def generatebill(datas):
     cgst = total_amount * 0.09
     sgst = total_amount * 0.09
     # igst = total_amount * 0.18
-
-    # Set text and apply alignment for CGST
     table.rows[11].cells[9].text = f"{cgst:.2f}"
-    table.rows[11].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  # Right alignment
+    table.rows[11].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  
 
-    # Set text and apply alignment for SGST
     table.rows[12].cells[9].text = f"{sgst:.2f}"
-    table.rows[12].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  # Right alignment
+    table.rows[12].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  
 
-    # Set text and apply alignment for Total After Tax
     total_after_tax = total_amount + cgst + sgst
     table.rows[14].cells[9].text = f"{total_after_tax:.2f}"
-    table.rows[14].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  # Right alignment
-
+    table.rows[14].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  
     p = inflect.engine()
     number_to_text = p.number_to_words(total_after_tax).split("point")[0]
     table.rows[15].cells[2].text =  number_to_text +" rupees only"
@@ -182,7 +153,6 @@ def generatebill(datas):
         doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
         basedir = os.path.dirname(__file__)
         invdir = os.path.dirname(basedir)
-        print(os.path.join(invdir,"static","invoices",f"INV_{datas.get('bno', '')}.docx"))
         os.startfile(os.path.join(invdir,"static","invoices",f"INV_{datas.get('bno', '')}.docx"))
         return True
     except Exception as e:

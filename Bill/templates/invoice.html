@@ -44,65 +44,74 @@
                         <h3 style="color:#721c24 ">{{form.errors}}</h3>
                 </div>
             {% endif %}
-            <div class="form-section">
-                {% comment %} {% if form.errors.toAdd %} {% endcomment %}
-                    {% comment %} <h1>{{form.product1.value }} date<h1> {% endcomment %}
-                {% comment %} {% endif %} {% endcomment %}
-                <label>
-                    <input type="radio" name="dbupdate" value="yes" required > Update database
-                </label>
-                <label>
-                    <input type="radio" name="dbupdate" value="no"> Wait for E way Bill No
-                </label><br>
-                <div class="form-group">
-                    <label for="billno">Bill No:</label>
-                    <input type="text" id="billno" name="bno" value="{{form.bno.value|default:no}}"  >
+
+            {% if ubno == "not unique" %}
+                <div class="form-section" style="border:2px solid #f5c6cb  ;background-color:#f8d7da ;">
+                    <h3 style="color:#721c24 ">Bill Already available in the same number</h3>
                 </div>
-                <div class="form-group">
-                    <label for="toName">TO:</label>
-                    <div class="select-option">
-                        <select id='toName' name="toName" required value="">
-                            <option value="">select One</option>
-                            {% for comp in company %}
-                                <option value="{{comp.c_name}}" {% if comp.c_name == form.toName.value %}selected{% endif %} >{{comp.c_name}}</option>
-                            {% endfor %}
-                        </select>
-                        {% comment %} <button type="submit" class="fill" id="fill">Auto Fill</button> {% endcomment %}
-                        {% comment %} <a href="{% url 'Bill:invoice' name="Varshini fireworks" %}">Auto Fill</a> {% endcomment %}
+            {% endif %}
+
+            <div class="form-section">
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <label  ><input type="radio" id="update-yes" name="dbupdate" required  value="yes" >
+                            Update database</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="update-no" name="dbupdate" value="no" required>
+                        <label for="update-no">Wait for E way Bill No</label>
+                    </div>
+                </div>
+                <div class="form-columns">
+                    <div class="column">
+                        <!-- First 4 form groups -->
                         <div class="form-group">
-                            <label for="toAdd">TO Address : </label>
-                            <input type="text" id="toAdd" name="toAdd" required value="{{form.toAdd.value | default:""}}">
+                            <label for="billno">Bill No:</label>
+                            <input type="text" id="billno" name="bno" value="{{form.bno.value|default:no}}"  >
+                        </div>
+                        <div class="form-group">
+                            <label for="toName">TO:</label>
+                            <div class="select-option">
+                                <select id='toName' name="toName" required value="">
+                                    <option value="">select One</option>
+                                    {% for comp in company %}
+                                        <option value="{{comp.c_name}}" {% if comp.c_name == form.toName.value %}selected{% endif %} >{{comp.c_name}}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-group">
+                                    <label for="toAdd">TO Address : </label>
+                                    <input type="text" id="toAdd" name="toAdd" required value="{{form.toAdd.value | default:""}}">
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="invoiceDate">Invoice Date:</label>
+                                <input type="date" id="invoiceDate" required name="invoiceDate"  value="{{ form.invoiceDate.value|default:'' }}">
+                            </div>
                         </div>
                     </div>
-                    {% comment %} <input type="select" id="toName" name="toName" > {% endcomment %}
-                
-                </div>
-                <div class="form-row">
-                    {% comment %} <div class="form-group">
-                        <label for="invoiceNo">Invoice No:</label>
-                        <input type="text" id="invoiceNo" name="invoiceNo" >
-                    </div> {% endcomment %}
-                    <div class="form-group">
-                        <label for="invoiceDate">Invoice Date:</label>
-                        <input type="date" id="invoiceDate" required name="invoiceDate"  value="{{ form.invoiceDate.value|default:'' }}">
+                    <div class="column">
+                        <!-- Next 4 form groups -->
+                        <div class="form-group">
+                            <label for="ewayBill">E-Way Bill No:</label>
+                            <input type="text" id="ewayBill" name="eWayBill" value="{{fomr.eWayBill.value|default:""}}" >
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="gstno">Party's GST No:</label>
+                            <input type="text" id="gstno" name="gstin" value="{{form.gstin.value | default:""}}" >
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="shippingAdd">Shipping Address:</label>
+                            <input type="text" id="shippingAdd" name="shippingAdd"  value="{{form.shippingAdd.value | default:""}}">
+                        </div>
+                    </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="ewayBill">E-Way Bill No:</label>
-                    <input type="text" id="ewayBill" name="eWayBill" value="{{fomr.eWayBill.value|default:""}}" >
-                </div>
-
-                <div class="form-group">
-                    <label for="gstno">Party's GST No:</label>
-                    <input type="text" id="gstno" name="gstin" value="{{form.gstin.value | default:""}}" >
-                </div>
-
-                <div class="form-group">
-                    <label for="shippingAdd">Shipping Address:</label>
-                    <input type="text" id="shippingAdd" name="shippingAdd"  value="{{form.shippingAdd.value | default:""}}">
-                </div>
-            </div>
 
             <!-- Items Table -->
             <div class="form-section">
@@ -121,7 +130,6 @@
                         <tr>
                             <td>1</td>
                             <td>
-                                {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product1" name="product1" required>
                                     {% if form.product1.value %}
                                     <option value="{{form.product1.value}}"> {{form.product1.value}}</option>
@@ -145,7 +153,6 @@
                         </tr><tr>
                             <td>2</td>
                             <td>
-                                {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product2" name="product2">
                                     {% if form.product2.value %}
                                     <option value="{{form.product2.value}}"> {{form.product2.value}}</option>
@@ -169,7 +176,6 @@
                         </tr><tr>
                             <td>3</td>
                             <td>
-                                {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product3" name="product3">
                                     {% if form.product3.value %}
                                     <option value="{{form.product3.value}}"> {{form.product3.value}}</option>
@@ -193,7 +199,6 @@
                         </tr><tr>
                             <td>4</td>
                             <td>
-                                {% comment %} <input type="text" name="description[]" > {% endcomment %}
                                 <select id="product4" name="product4">
                                     {% if form.product4.value %}
                                     <option value="{{form.product4.value}}"> {{form.product4.value}}</option>
@@ -217,72 +222,77 @@
                         </tr>
                     </tbody>
                 </table>
-                {% comment %} <button type="button" id="addRow" class="addRow">Add Row</button> {% endcomment %}
-                {% comment %} <button type="button" id="calculateAmount" class="addRow">Caclulate</button> {% endcomment %}
             </div>
-            <div class="totals-section">
-                <div class="total-row">
-                    <span>Subtotal:</span>
-                    <span id="subtotal" name="subtotal">
-                        {% if subtotal%}
-                        {{subtotal}}.00
-                        {% else %}
-                        0.00
-                        {% endif %}
-                    </span>
+            <div class="bottom-sections">
+                <div class="bank-details">
+                    <div class="form-section">
+                        <h3>Bank Details</h3>
+                        <div class="form-group">
+                            <label for="bankName">Bank Name:</label>
+                            <input type="text" id="bankName" name="bankName" value="{{form.bankName.value |default:'Canara Bank'}}" required >
+                        </div>
+                        <div class="form-group">
+                            <label for="accountNo">Bank Account No:</label>
+                            <input type="text" id="accountNo" name="accNo" value="{{form.accountNo.value |default:'7453922214'}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ifscCode">Bank IFSC Code:</label>
+                            <input type="text" id="ifscCode" name="ifscCode" value="{{form.ifscCode.value |default:'IDIB000V025'}}" required>
+                        </div>
+                    </div>
                 </div>
-                <div class="total-row">
-                    <span>CGST (9%):</span>
-                    <span id="cgst" name="cgst">
-                        {% if gst%}
-                        {{gst}}
-                        {% else %}
-                        0.00
-                        {% endif %}
-                    </span>
-                </div>
-                <div class="total-row">
-                    <span>SGST (9%):</span>
-                    <span id="sgst" name="sgst">
-                        {% if gst%}
-                        {{gst}}
-                        {% else %}
-                        0.00
-                        {% endif %}
-                    </span>
-                </div>
-                <div class="total-row">
-                    <span>IGST (18%):</span>
-                    <span id="" name=""></span>
-                </div>
-                <div class="total-row grand-total">
-                    <span>Grand Total:</span>
-                    <span id="grand-total" name="grand">
-                        {% if grand%}
-                        {{grand}}
-                        {% else %}
-                        0.00
-                        {% endif %}
-                    </span>
+                <div class="totals-section">
+                    <!-- Totals calculation -->
+                    <div class="totals-section">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal" name="subtotal">
+                                {% if subtotal%}
+                                {{subtotal}}.00
+                                {% else %}
+                                0.00
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="total-row">
+                            <span>CGST (9%):</span>
+                            <span id="cgst" name="cgst">
+                                {% if gst%}
+                                {{gst}}
+                                {% else %}
+                                0.00
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="total-row">
+                            <span>SGST (9%):</span>
+                            <span id="sgst" name="sgst">
+                                {% if gst%}
+                                {{gst}}
+                                {% else %}
+                                0.00
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="total-row">
+                            <span>IGST (18%):</span>
+                            <span id="" name=""></span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span>Grand Total:</span>
+                            <span id="grand-total" name="grand">
+                                {% if grand%}
+                                {{grand}}
+                                {% else %}
+                                0.00
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Bank Details -->
-            <div class="form-section">
-                <h3>Bank Details</h3>
-                <div class="form-group">
-                    <label for="bankName">Bank Name:</label>
-                    <input type="text" id="bankName" name="bankName" value="{{form.bankName.value |default:'Canara Bank'}}" required >
-                </div>
-                <div class="form-group">
-                    <label for="accountNo">Bank Account No:</label>
-                    <input type="text" id="accountNo" name="accNo" value="{{form.accountNo.value |default:'7453922214'}}" required>
-                </div>
-                <div class="form-group">
-                    <label for="ifscCode">Bank IFSC Code:</label>
-                    <input type="text" id="ifscCode" name="ifscCode" value="{{form.ifscCode.value |default:'IDIB000V025'}}" required>
-                </div>
-            </div>
+            
 
             <!-- Submit Button -->
             <div class="form-section">
@@ -313,7 +323,7 @@ $(document).ready(function () {
         const to_Name = $('#toName').val();
         if (to_Name) {
             $.ajax({
-                url: '/products/',  // URL for fetching products
+                url: '/products/',  
                 data: { toName: to_Name ,prod:prod},
                 success: function (response) {
                     $('#rate1').val(response.price);
@@ -326,7 +336,7 @@ $(document).ready(function () {
         const to_Name = $('#toName').val();
         if (to_Name) {
             $.ajax({
-                url: '/products/',  // URL for fetching products
+                url: '/products/',  
                 data: { toName: to_Name ,prod:prod},
                 success: function (response) {
                     $('#rate2').val(response.price);
@@ -339,7 +349,7 @@ $(document).ready(function () {
         const to_Name = $('#toName').val();
         if (to_Name) {
             $.ajax({
-                url: '/products/',  // URL for fetching products
+                url: '/products/',  
                 data: { toName: to_Name ,prod:prod},
                 success: function (response) {
                     $('#rate3').val(response.price);
@@ -352,7 +362,7 @@ $(document).ready(function () {
         const to_Name = $('#toName').val();
         if (to_Name) {
             $.ajax({
-                url: '/products/',  // URL for fetching products
+                url: '/products/',  
                 data: { toName: to_Name ,prod:prod},
                 success: function (response) {
                     $('#rate4').val(response.price);
@@ -362,20 +372,17 @@ $(document).ready(function () {
     });
 
     function calculateTotals() {
-        // Calculate subtotal from all amount fields
         let subtotal = 0;
         for(let i = 1; i <= 4; i++) {
             let amount = parseFloat($("#amt" + i).val()) || 0;
             subtotal += amount;
         }
         
-        // Update subtotal display
         $("#subtotal").text(subtotal.toFixed(2));
         
-        // Calculate taxes
-        const cgstRate = 0.09; // 9%
-        const sgstRate = 0.09; // 9%
-        const igstRate = 0.18; // 18%
+        const cgstRate = 0.09; 
+        const sgstRate = 0.09; 
+        const igstRate = 0.18; 
         
         const cgstAmount = subtotal * cgstRate;
         const sgstAmount = subtotal * sgstRate;
@@ -386,33 +393,28 @@ $(document).ready(function () {
         $("#sgst").text(sgstAmount.toFixed(2));
        // $("#igst").text(igstAmount.toFixed(2));
         
-        // Calculate and update grand total
-        // Note: Typically you'd apply either CGST+SGST OR IGST, not both
-        // Here I'm including all for demonstration
         const grandTotal = subtotal + cgstAmount + sgstAmount;
         $("#grand-total").text(grandTotal.toFixed(2));
     }
 
-    // Modified quantity change handlers
     $('#qty1, #qty2, #qty3, #qty4').change(function() {
-        const rowNum = this.id.slice(-1); // Get the row number from the ID
+        const rowNum = this.id.slice(-1); 
         const qty = parseFloat($(this).val()) || 0;
         const rate = parseFloat($(`#rate${rowNum}`).val()) || 0;
         const total = qty * rate;
         
         $(`#amt${rowNum}`).val(total.toFixed(2));
-        calculateTotals(); // Update all totals after any change
+        calculateTotals(); 
     });
 
-    // Add change handlers for rate fields as well
     $('#rate1, #rate2, #rate3, #rate4').change(function() {
-        const rowNum = this.id.slice(-1); // Get the row number from the ID
+        const rowNum = this.id.slice(-1); 
         const qty = parseFloat($(`#qty${rowNum}`).val()) || 0;
         const rate = parseFloat($(this).val()) || 0;
         const total = qty * rate;
         
         $(`#amt${rowNum}`).val(total.toFixed(2));
-        calculateTotals(); // Update all totals after any change
+        calculateTotals(); 
     });
 
 });

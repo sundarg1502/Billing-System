@@ -2,7 +2,7 @@ from django import forms
 from Bill.models import *
 
 class InvoiceForm(forms.ModelForm):
-    dbupdate = forms.CharField()
+    dbupdate = forms.CharField(required=True)
     bno = forms.IntegerField()
     toName  = forms.CharField(label="toName",required=True)
     invoiceDate = forms.DateField(label="invoiceDate",required=True)
