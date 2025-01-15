@@ -19,15 +19,15 @@ def invoice(request):
         total=0
         gt=0
         success=True
-        for error in filledform.errors:
-            print(error)
+        # for error in filledform.errors:
+        #     print(error)
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             success = generatebill(filled_data)
-            print(filled_data)
-            for fata in filled_data:
-                print(f"data from the form {fata}")
-            print(success)
+            # print(filled_data)
+            # for fata in filled_data:
+            #     print(f"data from the form {fata}")
+            # print(success)
 
             try:
                 product_to_append = ""
@@ -47,7 +47,7 @@ def invoice(request):
                         pass
                 gt = total + (total*0.18)
                 if success is False and filled_data['dbupdate']=="yes":
-                    print("message to update the db")
+                    # print("message to update the db")
                     bill_id=filledform.save() 
                     Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
                 # print(f"data from the lop produtc {product_to_append} and qty{qty_to_append} rate {rate_to_append} totla {total} gt is {gt}")
@@ -99,7 +99,7 @@ def generatebill(datas):
     to_bold = table.rows[1].cells[3]
     to_cell = to_bold.paragraphs[0].clear()
     to_cell.add_run("To : ").bold=True
-    to_cell.add_run(f"{datas.get('toName', '')},{datas.get('shippingAddress', '')}")
+    to_cell.add_run(f"{datas.get('toName', '')},{datas.get('toAdd', '')}")
 
     table.rows[1].cells[7].text = str(datas.get("bno",""))
     table.rows[2].cells[7].text = date
@@ -112,7 +112,10 @@ def generatebill(datas):
     if datas.get('eWayBill'):
         table.rows[3].cells[7].text = datas['eWayBill']
     
-    table.rows[4].cells[4].text = f"Shipping address : "
+    shippingadd_bold = table.rows[4].cells[4]
+    shippingAdd_cell = shippingadd_bold.paragraphs[0].clear()
+    shippingAdd_cell.add_run(f"Shipping address : ").bold=True
+    shippingAdd_cell.add_run(datas["shippingAdd"])
 
     total_amount = 0
     for idx, (desc, hsn, qty, rate) in enumerate(items, 1):

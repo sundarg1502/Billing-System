@@ -7,7 +7,8 @@ class InvoiceForm(forms.ModelForm):
     invoiceDate = forms.DateField(label="invoiceDate",required=True)
     eWayBill = forms.CharField(label="ewayBill",required=False)
     gstin = forms.CharField(required=False)
-    shippingAddress = forms.CharField(label="shippingAddress")
+    toAdd = forms.CharField()
+    shippingAdd = forms.CharField()
     product1 = forms.CharField(label="product1",required=True)
     qty1 = forms.IntegerField()
     rate1 = forms.IntegerField()
@@ -39,7 +40,7 @@ class InvoiceForm(forms.ModelForm):
     
     class Meta: 
         model = Bill
-        fields = ['bno','toName',"gstin","invoiceDate","shippingAddress","eWayBill",
+        fields = ['bno','toName',"gstin","invoiceDate","toAdd","eWayBill",
                   # "product",
                 #   "qty","amt1",
                   "bankName","accNo","ifscCode"]
