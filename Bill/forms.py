@@ -40,7 +40,7 @@ class InvoiceForm(forms.ModelForm):
     
     class Meta: 
         model = Bill
-        fields = ['bno','toName',"gstin","invoiceDate","toAdd","eWayBill",
+        fields = ['bno','toName',"gstin","invoiceDate","toAdd","eWayBill","shippingAdd",
                   # "product",
                 #   "qty","amt1",
                   "bankName","accNo","ifscCode"]

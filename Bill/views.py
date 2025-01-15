@@ -24,9 +24,9 @@ def invoice(request):
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             success = generatebill(filled_data)
-            # print(filled_data)
-            # for fata in filled_data:
-            #     print(f"data from the form {fata}")
+            print(filled_data)
+            for fata in filled_data:
+                print(f"data from the form {fata}")
             # print(success)
 
             try:
@@ -158,7 +158,7 @@ def generatebill(datas):
     table.rows[15].cells[2].text =  number_to_text +" rupees only"
     try:
         doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
-        os.startfile(f"D:/self/Business/SMM/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")
+        os.startfile(f"C:/Users/sunda/Desktop/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")
         return False
     except Exception as e:
         print(e)
