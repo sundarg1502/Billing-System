@@ -73,13 +73,6 @@ def products(request):
     return JsonResponse({'price':rate})
 
 def generatebill(datas):
-    invoice_details = {
-        'invoice_no': 'INV-001',
-        'date': '11-01-2025',
-        'gstin': '29ABCDE1234F1Z5',
-        'shipping_address': '123 Main St, Bangalore - 560001',
-        'eway_bill': ''
-    }
     items = [
     ]
     try:
@@ -130,8 +123,11 @@ def generatebill(datas):
         row.cells[1].text = desc+[" Titanium Powder"]
         row.cells[5].text = str(hsn)
         row.cells[6].text = str(qty)+" KG"
-        row.cells[8].text = str(rate)
+        row.cells[8].text = str(rate)+".00"
         row.cells[9].text = f"{amount:.2f}"
+
+        paragraph = row.cells[9].paragraphs[0]
+        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
     
     table.rows[10].cells[9].text = f"{total_amount:.2f}" # Set horizontal alignment (right)
     paragraph = table.rows[10].cells[9].paragraphs[0]
