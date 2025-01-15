@@ -1,5 +1,6 @@
 from django import forms 
 from Bill.models import *
+
 class InvoiceForm(forms.ModelForm):
     dbupdate = forms.CharField()
     bno = forms.IntegerField()
@@ -8,7 +9,7 @@ class InvoiceForm(forms.ModelForm):
     eWayBill = forms.CharField(label="ewayBill",required=False)
     gstin = forms.CharField(required=False)
     toAdd = forms.CharField()
-    shippingAdd = forms.CharField()
+    shippingAdd = forms.CharField(required=False)
     product1 = forms.CharField(label="product1",required=True)
     qty1 = forms.IntegerField()
     rate1 = forms.IntegerField()

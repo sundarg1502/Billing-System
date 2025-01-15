@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.invoice, name='invoice'),
     path('products/', views.products, name='products'),
     path('address/', views.address, name='address'),
+    # path('billno/', views.billno, name='billno'),
 ]

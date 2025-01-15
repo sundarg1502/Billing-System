@@ -14,16 +14,27 @@ def invoice(request):
         bill = Bill.objects.all().last().bno    
     except:
         bill = 0
+    # print(bill)
+    # sample = Bill.objects.get(bno=6)
+    # print(f"sample data{sample}")
     if request.method == 'POST':
         filledform = InvoiceForm(request.POST)
+        # print(filledform)
         total=0
         gt=0
         success=True
         # for error in filledform.errors:
         #     print(error)
+        bill_status = ""
+        db_status = ""
         if filledform.is_valid():
             filled_data = {key: value for key, value in filledform.cleaned_data.items() if value}
             success = generatebill(filled_data)
+            if success:
+                bill_status = "success"
+            else:
+                bill_status = "not success"
+
             print(filled_data)
             for fata in filled_data:
                 print(f"data from the form {fata}")
@@ -46,16 +57,19 @@ def invoice(request):
                     except:
                         pass
                 gt = total + (total*0.18)
-                if success is False and filled_data['dbupdate']=="yes":
-                    # print("message to update the db")
+                db_status="not success"
+                if filled_data['dbupdate']=="yes":
+                    print("message to update the db")
                     bill_id=filledform.save() 
                     Products.objects.create(bill=bill_id,items=product_to_append,qty=qty_to_append,rate=rate_to_append,amt=amt_to_append,hsn='81082000',grandTotal=gt)
+                    db_status ="success"
+                # else:
                 # print(f"data from the lop produtc {product_to_append} and qty{qty_to_append} rate {rate_to_append} totla {total} gt is {gt}")
             except Exception as e :
                 print(e)
             # print(filled_data)
             # print("form submitted"),
-        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":F"{total*0.09:.2f}" ,"fileerror":success})
+        return render(request, "invoice.html",{"company":company,"no":bill+1,"form":filledform,"subtotal":total,"grand":gt,"gst":F"{total*0.09:.2f}" ,"fileerror":bill_status,"dbstatus":db_status})
 
     return render(request, "invoice.html",{"company":company,"no":bill+1})
 
@@ -63,6 +77,10 @@ def address(request):
     add = Company.objects.get(c_name=request.GET.get('toName')).toAddress
     gst = Company.objects.get(c_name=request.GET.get('toName')).gstIN
     return JsonResponse({'add':add,'gst':gst})
+
+def billno(request):
+    print(request.GET.get("bno"))
+    return JsonResponse({'add':"none"})
 
 def products(request):
     cName = request.GET.get('toName')
@@ -88,7 +106,7 @@ def generatebill(datas):
                 product = (product_name,"81082000",qty,rate)
                 items.append(product)
     except Exception as e:
-        # print(e)
+        print(e)
         pass
 
     doc = Document("static/Template.docx")
@@ -115,7 +133,11 @@ def generatebill(datas):
     shippingadd_bold = table.rows[4].cells[4]
     shippingAdd_cell = shippingadd_bold.paragraphs[0].clear()
     shippingAdd_cell.add_run(f"Shipping address : ").bold=True
-    shippingAdd_cell.add_run(datas["shippingAdd"])
+    try:
+        if datas["shippingAdd"]:
+            shippingAdd_cell.add_run(datas["shippingAdd"])
+    except:
+        pass
 
     total_amount = 0
     for idx, (desc, hsn, qty, rate) in enumerate(items, 1):
@@ -158,8 +180,11 @@ def generatebill(datas):
     table.rows[15].cells[2].text =  number_to_text +" rupees only"
     try:
         doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
-        os.startfile(f"C:/Users/sunda/Desktop/Billing-System/static/invoices/INV_{datas.get('bno', '')}.docx")
-        return False
+        basedir = os.path.dirname(__file__)
+        invdir = os.path.dirname(basedir)
+        print(os.path.join(invdir,"static","invoices",f"INV_{datas.get('bno', '')}.docx"))
+        os.startfile(os.path.join(invdir,"static","invoices",f"INV_{datas.get('bno', '')}.docx"))
+        return True
     except Exception as e:
         print(e)
-    return True
+    return False

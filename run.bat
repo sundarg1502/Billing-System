@@ -1,9 +1,6 @@
 @echo off
-REM Navigate to your Django project directory
-cd D:\self\Business\SMM\Billing-System
-
-REM Activate the virtual environment (if needed)
-call C:\path\to\your\venv\Scripts\activate
+REM Navigate to the Django project directory relative to the script location
+cd "%~dp0Billing-System"
 
 REM Run the Django server
 start cmd /k "python manage.py runserver"
