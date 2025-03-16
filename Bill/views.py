@@ -71,6 +71,18 @@ def products(request):
     rate = getattr(company,product)
     return JsonResponse({'price':rate})
 
+def rupess_cov(amount):
+    cvt = inflect.engine()
+    blk =  int(int(amount)%100000)
+    print(str(amount)[0])
+    lk = f"{cvt.number_to_words(str(amount)[0])} lakh" if amount//100000 >0 else 0
+    rupees = f"{cvt.number_to_words(blk)} Rupees "
+    paise = int(str(amount).split(".")[-1]) if len(str(amount).split("."))>=2 else -1
+    if paise>0:
+        return f"{lk if lk!=0 else ""} {rupees}and {cvt.number_to_words(paise)} Paise only "
+    else:
+        return  f"{lk if lk!=0 else ""} {rupees}Only"
+ 
 def generatebill(datas):
     items = [
     ]
@@ -121,7 +133,11 @@ def generatebill(datas):
         amount = float(qty) * float(rate)
         total_amount += amount
         row.cells[0].text = str(idx)
-        row.cells[1].text = desc+[" Titanium Powder"]
+        print(desc)
+        if desc[0] == "scrap":
+            row.cells[1].text = "Titanium Scrap"
+        else:
+            row.cells[1].text = desc+[" Titanium Powder"]
         row.cells[5].text = str(hsn)
         row.cells[6].text = str(qty)+" KG"
         row.cells[8].text = str(rate)+".00"
@@ -146,9 +162,7 @@ def generatebill(datas):
     total_after_tax = total_amount + cgst + sgst
     table.rows[14].cells[9].text = f"{total_after_tax:.2f}"
     table.rows[14].cells[9].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT  
-    p = inflect.engine()
-    number_to_text = p.number_to_words(total_after_tax).split("point")[0]
-    table.rows[15].cells[2].text =  number_to_text +" rupees only"
+    table.rows[15].cells[2].text =  rupess_cov(total_after_tax)
     try:
         doc.save(f"static/invoices/INV_{datas.get('bno', '')}.docx")
         basedir = os.path.dirname(__file__)

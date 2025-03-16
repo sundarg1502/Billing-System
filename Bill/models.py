@@ -14,6 +14,7 @@ class Company(models.Model):
     mesh_40_60 = models.IntegerField() 
     mesh_60_80 = models.IntegerField() 
     mesh_80_100 = models.IntegerField() 
+    tt_scrap = models.IntegerField() 
 
     def __str__(self):
         return self.c_name
